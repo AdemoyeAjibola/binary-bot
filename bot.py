@@ -748,6 +748,21 @@ def telegram_webhook():
         handle_command(text, chat_id=chat_id)
     return jsonify({"ok": True})
 
+def run_strategies(symbol: str, interval: str = "1m"):
+    """
+    Run all strategies on the given symbol and interval.
+    Returns: dict of strategy_name -> {"vote": "CALL"/"PUT"/"NEUT"}
+    """
+    try:
+        df = get_klines(symbol, interval)  # fetch candles from Binance/cache
+        if df is None or df.empty:
+            return {}
+        return evaluate_strategies(df)     # run pandas_ta + thresholds
+    except Exception as e:
+        LOG.exception(f"Strategy error for {symbol} {interval}: {e}")
+        return {}
+
+
 # -------------------- Webhook (TradingView) --------------------
 @app.route("/webhook", methods=["POST"])
 def webhook():
