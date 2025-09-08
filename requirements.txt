@@ -4,6 +4,5 @@ apscheduler>=3.8
 python-dotenv>=1.0
 gunicorn>=20.0
 pandas>=2.0
-pandas-ta==0.3.14b0
-
+pandas-ta
 tzlocal>=3.0
